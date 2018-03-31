@@ -6,7 +6,9 @@
 package php_lexicalanalyzer;
 
 import java.io.File;
+import java.io.PrintWriter;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -80,7 +82,7 @@ public class Frame extends javax.swing.JFrame
       jLabel3.setForeground(new java.awt.Color(255, 255, 255));
       jLabel3.setText("lexical analyzer corrections");
 
-      lblClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/lexicalanalyzer/clear.png"))); // NOI18N
+      lblClear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/php_lexicalanalyzer/clear.png"))); // NOI18N
       lblClear.addMouseListener(new java.awt.event.MouseAdapter()
       {
          public void mouseClicked(java.awt.event.MouseEvent evt)
@@ -130,17 +132,17 @@ public class Frame extends javax.swing.JFrame
             .addContainerGap(23, Short.MAX_VALUE))
          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-               .addComponent(btnExport)
-               .addComponent(lblClear))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+               .addComponent(btnExport, javax.swing.GroupLayout.Alignment.TRAILING)
+               .addComponent(lblClear, javax.swing.GroupLayout.Alignment.TRAILING))
             .addGap(23, 23, 23))
       );
       jPanel1Layout.setVerticalGroup(
          jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblClear)
-            .addGap(18, 18, 18)
+            .addContainerGap()
+            .addComponent(lblClear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -154,7 +156,7 @@ public class Frame extends javax.swing.JFrame
                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(46, 46, 46))
+            .addGap(40, 40, 40))
       );
 
       javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -174,6 +176,7 @@ public class Frame extends javax.swing.JFrame
    private void btnImportActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnImportActionPerformed
    {//GEN-HEADEREND:event_btnImportActionPerformed
       // TODO add your handling code here:
+      lexicalAnalyzer.reviewLexerDotJava();
        try{
           //front-end
             JFileChooser chooser = new JFileChooser();
@@ -182,12 +185,11 @@ public class Frame extends javax.swing.JFrame
             chooser.setCurrentDirectory(new File("."));
             chooser.showOpenDialog(chooser);
             
-            lexicalAnalyzer.ReadFileContent(chooser.getSelectedFile().getAbsolutePath());
-              
+            txtStatements.setText(lexicalAnalyzer.ReadFileContent(chooser.getSelectedFile().getAbsolutePath()));
+            txtResults.setText(lexicalAnalyzer.ProcessingInput());
         }catch(Exception e){
            
         }
-      
    }//GEN-LAST:event_btnImportActionPerformed
 
    private void lblClearMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_lblClearMouseClicked
@@ -196,11 +198,20 @@ public class Frame extends javax.swing.JFrame
       txtCorrections.setText("");
       txtResults.setText("");
       txtStatements.setText("");
+      
+      try{
+         //delete the content of lexer.java file
+         PrintWriter writer = new PrintWriter("src\\php_lexicalanalyzer\\Lexer.java");
+         writer.print("");
+         writer.close();
+         JOptionPane.showMessageDialog(null,"Se ha borrado Lexer.java con éxito"); 
+      }catch(Exception e){}
    }//GEN-LAST:event_lblClearMouseClicked
 
    private void btnExportActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnExportActionPerformed
    {//GEN-HEADEREND:event_btnExportActionPerformed
       // TODO add your handling code here:
+      
    }//GEN-LAST:event_btnExportActionPerformed
 
    /**

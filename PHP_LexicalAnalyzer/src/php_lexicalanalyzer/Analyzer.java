@@ -5,14 +5,90 @@
  */
 package php_lexicalanalyzer;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
  *
  * @author usuario
  */
 public class Analyzer
 {
+   public String contentToAnalyze="";
+
+   public Analyzer()
+   {
+      reviewLexerDotJava();
+   }
+  
+   public String ReadFileContent(String path)throws  Exception{
+      String content="";
+       File entry = new File(path);
+       BufferedReader reader = new BufferedReader(new FileReader(entry));
+       
+       String line;
+         while ((line = reader.readLine()) != null){
+           content+=line.trim()+"\n";
+         }
+       reader.close();
+       
+       contentToAnalyze = content.replace("\n", " \n");
+       return content;
+    }
    
-   public  void ReadFileContent(String path){
+   public String ProcessingInput() throws  IOException{
+        File temporalFile = new File("temporalFile.txt");
+        PrintWriter writer;
+        try{
+           writer = new PrintWriter(temporalFile);
+           writer.print(contentToAnalyze); //this fill the temp file with the current php instructions to analyze
+           writer.close();
+        }
+        catch(Exception e){
+        }
+        Reader reader = new BufferedReader(new FileReader("temporalFile.txt"));
+        Lexer lex = new Lexer(reader);
+        String results="";
+       
+        //se comienza a evaluar cada caracter
+        while (true)
+        {
+           try{
+              Token token = lex.yylex();
+               if(token==null){
+                  results+="**** the analyze was finished ****";
+                  reader.close();
+                  deleteFile("temporalFile.txt");
+                   return results; //show the results
+                } //termina la evaluacion 
+           
+                switch(token){
+                  case ERROR: //print if had an error
+                     results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
+                   break;
+                   default:
+                      results+=token+": "+lex.lexeme+"\n";
+                   break;
+               }
+           }catch(Exception e){ return results+="**** the analyze was finished ****";}
+     }
+   }
    
+   private  void deleteFile(String path){
+      try {
+         Files.delete(Paths.get(path));
+      } catch (Exception e) {
+      }
+   }
+   
+   public void reviewLexerDotJava(){
+      try{
+         BufferedReader br = new BufferedReader(new FileReader("src\\php_lexicalanalyzer\\lexer.java"));
+         if(br.readLine() == null){
+            //crear el archivo lexer
+            jflex.Main.generate(new File("src\\php_lexicalanalyzer\\Rules.flex"));
+         }
+      }catch(Exception e){}
    }
 }

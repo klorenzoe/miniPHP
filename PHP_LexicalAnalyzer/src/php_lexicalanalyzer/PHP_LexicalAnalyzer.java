@@ -18,6 +18,8 @@ public class PHP_LexicalAnalyzer
    public static void main(String[] args)
    {
       // TODO code application logic here
+      Frame interphase = new Frame();
+      interphase.setVisible(true);
    }
    
 }

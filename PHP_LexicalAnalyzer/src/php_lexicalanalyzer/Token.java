@@ -11,5 +11,5 @@ package php_lexicalanalyzer;
  */
 public enum Token
 {
-   RESERVE_WORD, ERROR
+   ARITMETIC_OPERATOR, RESERVE_WORD, ERROR, OTHER
 }

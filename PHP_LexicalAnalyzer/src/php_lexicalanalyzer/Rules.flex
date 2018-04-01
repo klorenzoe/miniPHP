@@ -9,6 +9,7 @@ white=[ ]
 digits= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
 letters= "q"|"w"|"e"|"r"|"t"|"y"|"u"|"i"|"o"|"p"|"a"|"s"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"ñ"|"z"|"x"|"c"|"v"|"b"|"n"|"m"|"Q"|"W"|"E"|"R"|"T"|"Y"|"U"|"I"|"O"|"P"|"A"|"S"|"D"|"F"|"G"|"H"|"J"|"K"|"L"|"Ñ"|"Z"|"X"|"C"|"V"|"B"|"N"|"M"
 symbolsString = "!"|"#"|"%"|"&"|"("|")"|"="|"?"|"¡"|"¨"|"*"|"["|"]"|"_"|":"|";"|">"|"<"|"°"|"|"|"¬"|"~"|"-"|"+"|" "
+symbolsIdentifier = "_"|{letters}|{naturalNumbers}
 stringElements = {letters} | {symbolsString} | {digits}
 naturalNumbers= {digits}{digits}*
 integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
@@ -35,6 +36,7 @@ integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
 realNumber = {integerNumbers} | {integerNumbers}"."{integerNumbers} | {integerNumbers}"/"{integerNumbers} | {integerNumbers}"E"[+-]{integerNumbers}
 stringData = "'"{stringElements}+"'"
  
+identifiers = {letters}{symbolsIdentifier}*
 
 %{
    public String lexeme ="";
@@ -50,4 +52,5 @@ stringData = "'"{stringElements}+"'"
 {integerNumbers} {lexeme=yytext(); return TYPE_INT;}
 {realNumber} {lexeme=yytext(); return TYPE_REAL;}
 {stringData} {lexeme=yytext(); return TYPE_STRING;}
+{identifiers} {lexeme=yytext(); return IDENTIFIERS;}
 . {lexeme=yytext(); return ERROR;}

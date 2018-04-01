@@ -16,6 +16,7 @@ integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
 variables = "$"{identifiers}
 integerValues ={variables}|{integerNumbers}
 booleanValues = {variables}| {booleanData}
+equality= " ="|" = "|"="|"= "
 
 operators = "+"|" + "|"-"|" - "|"*"|" * "|"/"|" / "|"**"|" ** "|"%"|" % "
 operatorPlusNumber = {operators}{integerValues}
@@ -35,8 +36,10 @@ booleanData = "TRUE" | "FALSE" | "true" | "false";
 integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
 realNumber = {integerNumbers} | {integerNumbers}"."{integerNumbers} | {integerNumbers}"/"{integerNumbers} | {integerNumbers}"E"[+-]{integerNumbers}
 stringData = "'"{stringElements}+"'"
+Data = {stringData}|{realNumber}|{integerNumbers}|{booleanData}
  
-identifiers = {letters}{symbolsIdentifier}*
+identifiers = "_"*{letters}{symbolsIdentifier}*
+constants = "public const "{identifiers}{equality}{Data}";"|"private const "{identifiers}{equality}{Data}";"|"define('"{identifiers}"', '"{Data}"');"|"const "{identifiers}{equality}{Data}";"
 
 %{
    public String lexeme ="";
@@ -54,4 +57,5 @@ identifiers = {letters}{symbolsIdentifier}*
 {stringData} {lexeme=yytext(); return TYPE_STRING;}
 {identifiers} {lexeme=yytext(); return IDENTIFIERS;}
 {variables} {lexeme=yytext(); return VARIABLES;}
+{constants} {lexeme=yytext(); return CONSTANTS;}
 . {lexeme=yytext(); return ERROR;}

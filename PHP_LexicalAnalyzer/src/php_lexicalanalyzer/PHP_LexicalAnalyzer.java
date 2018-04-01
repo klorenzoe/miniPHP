@@ -5,6 +5,8 @@
  */
 package php_lexicalanalyzer;
 
+import java.io.File;
+
 /**
  *
  * @author usuario

@@ -6,56 +6,48 @@ import static php_lexicalanalyzer.Token.*;
 %type Token
 
 white=[ ]
-digits= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
-letters= "q"|"w"|"e"|"r"|"t"|"y"|"u"|"i"|"o"|"p"|"a"|"s"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"ñ"|"z"|"x"|"c"|"v"|"b"|"n"|"m"|"Q"|"W"|"E"|"R"|"T"|"Y"|"U"|"I"|"O"|"P"|"A"|"S"|"D"|"F"|"G"|"H"|"J"|"K"|"L"|"Ñ"|"Z"|"X"|"C"|"V"|"B"|"N"|"M"
-symbolsString = "!"|"#"|"%"|"&"|"("|")"|"="|"?"|"¡"|"¨"|"*"|"["|"]"|"_"|":"|";"|">"|"<"|"°"|"|"|"¬"|"~"|"-"|"+"|" "
-symbolsIdentifier = "_"|{letters}|{naturalNumbers}
-stringElements = {letters} | {symbolsString} | {digits}
-naturalNumbers= {digits}{digits}*
-integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
-variables = "$"{identifiers}
-integerValues ={variables}|{integerNumbers}
-booleanValues = {variables}| {booleanData}
-equality= " ="|" = "|"="|"= "
-
-operators = "+"|" + "|"-"|" - "|"*"|" * "|"/"|" / "|"**"|" ** "|"%"|" % "
-operatorPlusNumber = {operators}{integerValues}
-operatorPlusOperation = {operators}{arithmeticOperators}
-logicalOperators ="&&"|" and "|" or "|" xor "|" && "|" || "|"||"
-logicalPlusValue = {logicalOperators}{booleanValues}
-logicalPlusOperation = {logicalOperators}{logicalOperations}
-
 scapeSecuence = \n|\r|\t|\f|\b
-reserveWords = "die()"|"do"|"echo"|"else"|"elseif"|"empty()"|"enddeclare"|"endfor"|"endforeach"|"endif"|"endswitch"|"endwhile"|"eval()"|"exit()"|"extends"|"xor"|"yield"|"__halt_compiler()"|"abstract"|"and"|"array()"|"as"|"break"|"callable"|"case"|"catch"|"class"|"clone"|"const"|"continue"|"declare"|"default"|"use"|"var"|"while"|"final"|"finally"|"for"|"foreach"|"function"|"global"|"goto"|"if"|"implements"|"include"|"include_once"|"instanceof"|"insteadof"|"interface"|"isset()"|"list()"|"namespace"|"new"|"or"|"print"|"private"|"protected"|"public"|"require"|"require_once"|"return"|"static"|"switch"|"throw"|"trait"|"try"|"unset()"
-arithmeticOperators = "+"{integerValues} | "-"{integerValues} | {integerValues}{operators}{integerValues}
-aritmeticExpression = {arithmeticOperators}{operatorPlusNumber}* | {arithmeticOperators}{operatorPlusOperation}*
-logicalOperations = {booleanValues}{logicalOperators}{booleanValues} | "!"{booleanValues}
-logicalExpression = {logicalOperations}{logicalPlusValue}* | {logicalOperations}{logicalPlusOperation}*
-
-booleanData = "TRUE" | "FALSE" | "true" | "false";
-integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
+digits= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+letters= "q"|"w"|"e"|"r"|"t"|"y"|"u"|"i"|"o"|"p"|"a"|"s"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"ñ"|"z"|"x"|"c"|"v"|"b"|"n"|"m"
+symbolsString = "!"|"#"|"%"|"&"|"("|")"|"="|"¿"|"?"|"¡"|"¨"|"*"|"["|"]"|"_"|":"|";"|">"|"<"|"°"|"|"|"¬"|"~"|"-"|"+"|" "|"."|","|"\\"|"�"|"$"
+arithmeticOperator = "+"|"-"|"*"|"/"|"**"|"%"
+comparisonOperator = "=="|"!="|">"|"<"
+logicalOperators ="&&"|"and"|"or"|"xor"|"||"|"!"
+asignationOperator = "="
+symbolsIdentifier = "_"|{letters}|{digits}{digits}*
+stringElements = {letters} | {symbolsString} | {digits} | {scapeSecuence} | {arithmeticOperator} | {comparisonOperator}
+integerNumbers = "-"{digits}{digits}* | {digits}{digits}*
 realNumber = {integerNumbers} | {integerNumbers}"."{integerNumbers} | {integerNumbers}"/"{integerNumbers} | {integerNumbers}"E"[+-]{integerNumbers}
-stringData = "'"{stringElements}+"'"
-Data = {stringData}|{realNumber}|{integerNumbers}|{booleanData}
- 
+booleanValues = "TRUE" | "FALSE" | "true" | "false"
+stringValues = "'"{stringElements}*"'"|"\""{stringElements}*"\""
+continueSigns = ":"|","
+reserveWords ="if"|"else"|"while"|"do"|"for"|"foreach"|"as"|"break"|"switch"|"case"|"include"|"return"|"function"|"echo"|"continue"|"<?php"|"?>"
+opening = "("|"{"|"["
+closing =")"|"}"|";"|"]"
 identifiers = "_"*{letters}{symbolsIdentifier}*
-constants = "public const "{identifiers}{equality}{Data}";"|"private const "{identifiers}{equality}{Data}";"|"define('"{identifiers}"', '"{Data}"');"|"const "{identifiers}{equality}{Data}";"
+variables = "$"{identifiers}
+Comentaries = "//"{stringElements}*|"/*"{stringElements}*"*/"
 
 %{
    public String lexeme ="";
 %}
 
 %%
-{white} {/*ignore*/}
-{scapeSecuence} {/*ignore*/}
-{reserveWords} {lexeme=yytext(); return RESERVE_WORD;}
-{aritmeticExpression} {lexeme=yytext(); return ARITMETIC_OPERATOR;}
-{logicalExpression} {lexeme=yytext(); return LOGICAL_OPERATOR;}
-{booleanData} {lexeme=yytext(); return TYPE_BOOL;}
-{integerNumbers} {lexeme=yytext(); return TYPE_INT;}
-{realNumber} {lexeme=yytext(); return TYPE_REAL;}
-{stringData} {lexeme=yytext(); return TYPE_STRING;}
-{identifiers} {lexeme=yytext(); return IDENTIFIERS;}
-{variables} {lexeme=yytext(); return VARIABLES;}
-{constants} {lexeme=yytext(); return CONSTANTS;}
-. {lexeme=yytext(); return ERROR;}
+{white}* {/*ignore*/}
+{scapeSecuence}* {/*ignore*/}
+{reserveWords} {lexeme=yytext(); return Reserve_word;}
+{opening} {lexeme=yytext(); return Opening;}
+{closing} {lexeme=yytext(); return Closing;}
+{identifiers} {lexeme=yytext(); return Identifier;}
+{variables} {lexeme=yytext(); return Variable;}
+{comparisonOperator} {lexeme=yytext(); return Comparison_operator;}
+{arithmeticOperator} {lexeme=yytext(); return Arithmetic_operator;}
+{logicalOperators} {lexeme=yytext(); return Logical_operator;}
+{booleanValues} {lexeme=yytext(); return Boolean_value;}
+{integerNumbers} {lexeme=yytext(); return Int_value;}
+{realNumber} {lexeme=yytext(); return Real_value;}
+{stringValues} {lexeme=yytext(); return String_value;}
+{continueSigns} {lexeme=yytext(); return Continue_sign;}
+{Comentaries} {lexeme=yytext(); return Comments;}
+{asignationOperator} {lexeme=yytext(); return Asignation_operator;}
+. {lexeme=yytext(); return Error;}

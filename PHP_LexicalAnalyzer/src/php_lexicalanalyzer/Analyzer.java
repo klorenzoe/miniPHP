@@ -32,8 +32,7 @@ public class Analyzer
            content+=line.trim()+"\n";
          }
        reader.close();
-       
-       contentToAnalyze = content.replace("\n", " \n");
+       contentToAnalyze = content.replace("\n", " \n").toLowerCase();
        return content;
     }
    
@@ -64,7 +63,7 @@ public class Analyzer
                 } //termina la evaluacion 
            
                 switch(token){
-                  case ERROR: //print if had an error
+                  case Error: //print if had an error
                      results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
                    break;
                    default:
@@ -84,10 +83,16 @@ public class Analyzer
    
    public void reviewLexerDotJava(){
       try{
-         BufferedReader br = new BufferedReader(new FileReader("src\\php_lexicalanalyzer\\lexer.java"));
+         FileReader reader = new FileReader("src\\php_lexicalanalyzer\\lexer.java");
+         BufferedReader br = new BufferedReader(reader);
          if(br.readLine() == null){
             //crear el archivo lexer
+            br.close();
+            reader.close();
             jflex.Main.generate(new File("src\\php_lexicalanalyzer\\Rules.flex"));
+         }else{
+            br.close();
+            reader.close();
          }
       }catch(Exception e){}
    }

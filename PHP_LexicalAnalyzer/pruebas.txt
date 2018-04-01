@@ -1,0 +1,129 @@
+while ($i <= 10) {
+    /* el valor presentado sería
+                   $i antes del incremento
+                   (post-incremento) */
+}
+
+while ($i <= 10):
+    echo $i;
+    $i++;
+endwhile;
+
+do {
+    echo $i;
+} while ($i > 0);
+
+do {
+    if ($i < 5) {
+        echo "i no es lo suficientemente grande";
+        break;
+    }
+    $i *= $factor;
+    if ($i < $minimum_limit) {
+        break;
+    }
+   echo "i está bien";
+
+    /* procesar i */
+
+} while (0);
+
+for ($i = 1; $i <= 10; $i++) {
+    echo $i;
+}
+
+for ($i = 1; ; $i++) {
+    if ($i > 10) {
+        break;
+    }
+    echo $i;
+}
+
+switch ($i) {
+    case 0:
+        echo "i es igual a 0";
+        break;
+    case 1:
+        echo "i es igual a 1";
+        break;
+    case 2:
+        echo "i es igual a 2";
+        break;
+}
+
+switch ($i) {
+    case "manzana":
+        echo "i es una manzana";
+        break;
+    case "barra":
+        echo "i es una barra";
+        break;
+    case "pastel":
+        echo "i es un pastel";
+        break;
+}
+
+include 'vars.php';
+include 'file.txt';  // Funciona.
+include 'file.php';  // Funciona.
+
+while (list($clave, $valor) = each($arr)) {
+    if (!($clave % 2)) { // saltar los miembros pares
+        continue;
+    }
+    hacer_algo($valor);
+}
+
+$i = 0;
+while ($i++ < 5) {
+
+echo "Exterior<br />\n";
+    while (1) {
+        echo "Medio<br />\n";
+        while (1) {
+            echo "Interior<br />\n";
+            continue 3;
+        }
+        echo "Esto nunca se imprimirá.<br \>\n";
+    }
+    echo "Ni esto tampoco.<br />\n";
+}
+
+<?php
+include("b.php");
+echo "a";
+?>
+
+
+<?php
+echo "b";
+return;
+?>
+
+//hechas
+if ($a > $b) {
+  echo "a es mayor que b";
+}
+
+if ($a > $b) {
+  echo "a es mayor que b";
+  $b = $a;
+}
+
+if (3 = $foo) bar();
+
+if ($bool) {
+    $hi = 'Hello to all people!';
+}
+
+if (false) {
+    $hi = 'Hello to all people!';
+}
+
+if( $a == 1 || $a == 2 ) { 
+    if( $b == 3 || $b == 4 ) { 
+        if( $c == 5 || $ d == 6 ) { 
+             //Do something here. 
+        } 
+    } 
+} 

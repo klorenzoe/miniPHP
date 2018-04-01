@@ -1,0 +1,7 @@
+a and b
+a or b
+a xor b
+!a
+a && b
+a || b
+true || false && false xor true

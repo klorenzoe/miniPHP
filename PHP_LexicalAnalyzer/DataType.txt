@@ -1,0 +1,12 @@
+'a'
+'Podafasdf'
+true
+FALSE
+'asdfhas#%W&#%&#'
+'true'
+2.666
+254.1
+105E-9
+85
+-965
+14

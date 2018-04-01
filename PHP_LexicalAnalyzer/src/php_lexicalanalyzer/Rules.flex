@@ -7,12 +7,14 @@ import static php_lexicalanalyzer.Token.*;
 
 white=[ ]
 digits= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+letters= "q"|"w"|"e"|"r"|"t"|"y"|"u"|"i"|"o"|"p"|"a"|"s"|"d"|"f"|"g"|"h"|"j"|"k"|"l"|"ñ"|"z"|"x"|"c"|"v"|"b"|"n"|"m"|"Q"|"W"|"E"|"R"|"T"|"Y"|"U"|"I"|"O"|"P"|"A"|"S"|"D"|"F"|"G"|"H"|"J"|"K"|"L"|"Ñ"|"Z"|"X"|"C"|"V"|"B"|"N"|"M"
+symbolsString = "!"|"#"|"%"|"&"|"("|")"|"="|"?"|"¡"|"¨"|"*"|"["|"]"|"_"|":"|";"|">"|"<"|"°"|"|"|"¬"|"~"|"-"|"+"|" "
+stringElements = {letters} | {symbolsString} | {digits}
 naturalNumbers= {digits}{digits}*
 integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
 variables = "a"|"b"
-
 integerValues ={variables}|{integerNumbers}
-booleanValues = {variables}| "TRUE" | "FALSE" | "true" | "false"
+booleanValues = {variables}| {booleanData}
 
 operators = "+"|" + "|"-"|" - "|"*"|" * "|"/"|" / "|"**"|" ** "|"%"|" % "
 operatorPlusNumber = {operators}{integerValues}
@@ -28,6 +30,12 @@ aritmeticExpression = {arithmeticOperators}{operatorPlusNumber}* | {arithmeticOp
 logicalOperations = {booleanValues}{logicalOperators}{booleanValues} | "!"{booleanValues}
 logicalExpression = {logicalOperations}{logicalPlusValue}* | {logicalOperations}{logicalPlusOperation}*
 
+booleanData = "TRUE" | "FALSE" | "true" | "false";
+integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
+realNumber = {integerNumbers} | {integerNumbers}"."{integerNumbers} | {integerNumbers}"/"{integerNumbers} | {integerNumbers}"E"[+-]{integerNumbers}
+stringData = "'"{stringElements}+"'"
+ 
+
 %{
    public String lexeme ="";
 %}
@@ -38,4 +46,8 @@ logicalExpression = {logicalOperations}{logicalPlusValue}* | {logicalOperations}
 {reserveWords} {lexeme=yytext(); return RESERVE_WORD;}
 {aritmeticExpression} {lexeme=yytext(); return ARITMETIC_OPERATOR;}
 {logicalExpression} {lexeme=yytext(); return LOGICAL_OPERATOR;}
+{booleanData} {lexeme=yytext(); return TYPE_BOOL;}
+{integerNumbers} {lexeme=yytext(); return TYPE_INT;}
+{realNumber} {lexeme=yytext(); return TYPE_REAL;}
+{stringData} {lexeme=yytext(); return TYPE_STRING;}
 . {lexeme=yytext(); return ERROR;}

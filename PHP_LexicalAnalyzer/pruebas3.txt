@@ -1,0 +1,10 @@
+WHIle ($i <= 10) {
+    /* el valor presentado sería
+                   $i antes del incremento
+                   (post-incremento) */
+}
+
+while ($i <= 10):
+    echo $i;
+    $i++;
+endwhile;

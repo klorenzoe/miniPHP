@@ -8,6 +8,8 @@ package php_lexicalanalyzer;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedList;
+
 
 /**
  *
@@ -16,6 +18,8 @@ import java.nio.file.Paths;
 public class Analyzer
 {
    public String contentToAnalyze="";
+   LinkedList<String> fixedErrors=new LinkedList<String> ();
+   public String contentFixed="";
 
    public Analyzer()
    {
@@ -37,6 +41,7 @@ public class Analyzer
     }
    
    public String ProcessingInput() throws  IOException{
+      fixedErrors.clear();
         File temporalFile = new File("temporalFile.txt");
         PrintWriter writer;
         try{
@@ -59,19 +64,58 @@ public class Analyzer
                   results+="**** the analyze was finished ****";
                   reader.close();
                   deleteFile("temporalFile.txt");
+                  contentFixed();
                    return results; //show the results
                 } //termina la evaluacion 
            
                 switch(token){
                   case Error: //print if had an error
                      results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
+                     fixedErrors.add(token+"á"+lex.lexeme);
                    break;
                    default:
-                      results+=token+": "+lex.lexeme+"\n";
+                      results+=token+":: "+lex.lexeme+"\n";
+                      fixedErrors.add(token+"á"+lex.lexeme);
                    break;
                }
            }catch(Exception e){ return results+="**** the analyze was finished ****";}
      }
+   }
+   
+   private void contentFixed(){
+      String result="";
+      for (int i = 0; i < fixedErrors.size(); i++)
+      {
+         String lexeme = fixedErrors.get(i).split("á")[1].replace("{", "{\n").replace("}", "}\n").replace(";", ";\n");
+         switch(fixedErrors.get(i).split("á")[0]){
+            case "switch": case "foreach": case "for": case "do": case "while": case "if":
+               result+=lexeme+"\n";
+               break;
+            case "Comments":
+               result+="\n"+lexeme+"\n";
+               break;
+            case "Function":
+               if(lexeme.contains("function")){
+                  String input = lexeme.split(" ")[1];
+                  result+= "\nfunction " + input.substring(0, 1).toUpperCase() + input.substring(1)+" ";
+               }else{
+                  String input = lexeme.split(" ")[1];
+                  result+= "\n"+input.substring(0, 1).toUpperCase() + input.substring(1)+" ";
+               }
+               break;
+            case "Access_field":
+               String name = lexeme.split("�")[1].toUpperCase();
+               result+= "\n"+lexeme.split("�")[0]+"'"+name+"'"+lexeme.split("�")[2];
+             break;
+            case "Default_variables":
+               result+= lexeme.toUpperCase()+" ";
+               break;
+            default:
+               result+=lexeme+" ";
+             break; 
+         }
+      }
+      contentFixed = result.replace("\n\n", "\n").replace("\n \n", "\n");
    }
    
    private  void deleteFile(String path){

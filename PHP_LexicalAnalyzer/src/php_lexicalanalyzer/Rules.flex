@@ -13,7 +13,7 @@ symbolsIdentifier = "_"|{letters}|{naturalNumbers}
 stringElements = {letters} | {symbolsString} | {digits}
 naturalNumbers= {digits}{digits}*
 integerNumbers = "-"{naturalNumbers} | {naturalNumbers}
-variables = "a"|"b"
+variables = "$"{identifiers}
 integerValues ={variables}|{integerNumbers}
 booleanValues = {variables}| {booleanData}
 
@@ -53,4 +53,5 @@ identifiers = {letters}{symbolsIdentifier}*
 {realNumber} {lexeme=yytext(); return TYPE_REAL;}
 {stringData} {lexeme=yytext(); return TYPE_STRING;}
 {identifiers} {lexeme=yytext(); return IDENTIFIERS;}
+{variables} {lexeme=yytext(); return VARIABLES;}
 . {lexeme=yytext(); return ERROR;}

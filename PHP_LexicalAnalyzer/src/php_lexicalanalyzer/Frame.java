@@ -207,16 +207,16 @@ public class Frame extends javax.swing.JFrame
        try{
           //front-end
             JFileChooser chooser = new JFileChooser();
-            chooser.setFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
+            chooser.setFileFilter(new FileNameExtensionFilter("*.txt", "txt","*.php","php"));
             chooser.setAcceptAllFileFilterUsed(false);
             chooser.setCurrentDirectory(new File("."));
             chooser.showOpenDialog(chooser);
             
             String[] split = chooser.getSelectedFile().getAbsolutePath().replace("\\", "!").split("!");
             inputName = split[split.length-1];
-            txtStatements.setText(lexicalAnalyzer.ReadFileContent(chooser.getSelectedFile().getAbsolutePath()));
+            txtStatements.setText( EnumTheAreas(lexicalAnalyzer.ReadFileContent(chooser.getSelectedFile().getAbsolutePath())));
             txtResults.setText(lexicalAnalyzer.ProcessingInput());
-            txtCorrections.setText(lexicalAnalyzer.contentFixed);
+            txtCorrections.setText(EnumTheAreasResult(lexicalAnalyzer.contentFixed));
         }catch(Exception e){
            
         }
@@ -242,14 +242,12 @@ public class Frame extends javax.swing.JFrame
    {//GEN-HEADEREND:event_btnExportActionPerformed
       // TODO add your handling code here:
       if(!txtCorrections.getText().isEmpty()){
-         int count =1;
-         File export;
          JFileChooser chooser = new JFileChooser(); 
          chooser.setCurrentDirectory(new java.io.File("."));
          chooser.setDialogTitle("Choose a location for save");
          chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
          chooser.setAcceptAllFileFilterUsed(false);
-         inputName = "\\"+inputName.replace("txt", "out");
+         inputName = "\\"+inputName.replace(".", "!").split("!")[0]+".out";
          //    
          try{
                if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -268,7 +266,29 @@ public class Frame extends javax.swing.JFrame
       }
    }//GEN-LAST:event_btnExportActionPerformed
 
+    private String EnumTheAreas(String areaText){
+         String[] lines = areaText.split("\n");
+         String resultText = "";
+         for (int i = 0; i < lines.length; i++)
+         {
+            resultText+=(i+1)+") "+lines[i]+"\n";
+         }
+         resultText = resultText.replace("é", "\\n");
+         return resultText;
+      }
+    
+    private String EnumTheAreasResult(String areaText){
+       areaText = areaText.replace("\\n", "###");
+      String[] lines = areaText.split("###");
+         String resultText = "";
+         for (int i = 0; i < lines.length; i++)
+         {
+            resultText+=(i+1)+") "+lines[i]+"\n";
+         }
+         return resultText;
+    }
    /**
+    * 
     * @param args the command line arguments
     */
    public static void main(String args[])

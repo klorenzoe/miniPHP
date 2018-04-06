@@ -11,5 +11,5 @@ package php_lexicalanalyzer;
  */
 public enum Token
 {
-   Reserve_word, Opening, Variable, Identifier, Comparison_operator,Asignation_operator, Arithmetic_operator, Logical_operator, Closing, Boolean_value, Int_value, Real_value, String_value, Continue_sign, Error, Comments, Access_field, Function, Constants, Default_variables 
+   Reserve_word, Opening, Variable, Identifier, Comparison_operator,Asignation_operator, Arithmetic_operator, Logical_operator, Closing, Boolean_value, Int_value, Real_value, String_value, Continue_sign, Error, Comments, Access_field, Function, Constants, Default_variables, Scape_secuence 
 }

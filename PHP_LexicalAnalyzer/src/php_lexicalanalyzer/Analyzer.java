@@ -36,7 +36,8 @@ public class Analyzer
            content+=line.trim()+"\n";
          }
        reader.close();
-       contentToAnalyze = content.replace("\n", " \n").toLowerCase();
+       //contentToAnalyze = content.replace("\n", " \n").toLowerCase();
+       contentToAnalyze = content.toLowerCase().replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t").replace("\f", "\\f").replace("\b", "\\b");
        return content;
     }
    
@@ -70,9 +71,14 @@ public class Analyzer
            
                 switch(token){
                   case Error: //print if had an error
-                     results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
-                     fixedErrors.add(token+"á"+lex.lexeme);
+                     if(!lex.lexeme.equals("")){
+                        results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
+                        fixedErrors.add(token+"á"+lex.lexeme);
+                     }
                    break;
+                  case Scape_secuence:
+                     fixedErrors.add(token+"á"+lex.lexeme);
+                     break;
                    default:
                       results+=token+":: "+lex.lexeme+"\n";
                       fixedErrors.add(token+"á"+lex.lexeme);
@@ -86,36 +92,52 @@ public class Analyzer
       String result="";
       for (int i = 0; i < fixedErrors.size(); i++)
       {
-         String lexeme = fixedErrors.get(i).split("á")[1].replace("{", "{\n").replace("}", "}\n").replace(";", ";\n");
+         String lexeme = fixedErrors.get(i).split("á")[1];//.replace("{", "{\n").replace("}", "}\n").replace(";", ";\n");
+         
+       //  lexeme = lexeme.replace("\\n", "\n").replace("\\r", "\r").replace("\\t", "\t").replace("\\f", "\f").replace("\\b", "\b");
          switch(fixedErrors.get(i).split("á")[0]){
             case "switch": case "foreach": case "for": case "do": case "while": case "if":
-               result+=lexeme+"\n";
+               //result+=lexeme+"\n";
+               result+=lexeme;
                break;
             case "Comments":
-               result+="\n"+lexeme+"\n";
+               //result+="\n"+lexeme+"\n";
+               result+=lexeme;
                break;
             case "Function":
                if(lexeme.contains("function")){
                   String input = lexeme.split(" ")[1];
-                  result+= "\nfunction " + input.substring(0, 1).toUpperCase() + input.substring(1)+" ";
+                 // result+= "\nfunction " + input.substring(0, 1).toUpperCase() + input.substring(1)+" ";
+                  result+= "function " + input.substring(0, 1).toUpperCase() + input.substring(1);
                }else{
                   String input = lexeme.split(" ")[1];
-                  result+= "\n"+input.substring(0, 1).toUpperCase() + input.substring(1)+" ";
+                  //result+= "\n"+input.substring(0, 1).toUpperCase() + input.substring(1)+" ";
+                  result+= input.substring(0, 1).toUpperCase() + input.substring(1);
                }
                break;
             case "Access_field":
                String name = lexeme.split("�")[1].toUpperCase();
-               result+= "\n"+lexeme.split("�")[0]+"'"+name+"'"+lexeme.split("�")[2];
-             break;
+               //result+= "\n"+lexeme.split("�")[0]+"'"+name+"'"+lexeme.split("�")[2];
+               result+= lexeme.split("�")[0]+"'"+name+"'"+lexeme.split("�")[2];
+               break;
             case "Default_variables":
-               result+= lexeme.toUpperCase()+" ";
+               //result+= lexeme.toUpperCase()+" ";
+               result+= lexeme.toUpperCase();
+               break;
+            case "String_value":
+               result+=lexeme;
+               break;
+            case "Error":
+               //result+= "\nESTE SÍMBOLO NO ESTA DEFINIDO: "+lexeme+"\n";
+               result+= "ESTE SÍMBOLO NO ESTA DEFINIDO: "+lexeme;
                break;
             default:
-               result+=lexeme+" ";
+               //result+=lexeme+" ";
+               result+=lexeme;
              break; 
          }
       }
-      contentFixed = result.replace("\n\n", "\n").replace("\n \n", "\n");
+      contentFixed = result;//.replace("\n\n", "\n").replace("\n \n", "\n").replace("(\n", "(");
    }
    
    private  void deleteFile(String path){

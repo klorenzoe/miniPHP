@@ -127,7 +127,7 @@ public class Analyzer
                break;
             case "Error":
                //result+= "\nESTE SÍMBOLO NO ESTA DEFINIDO: "+lexeme+"\n";
-               result+= "ESTE SÍMBOLO NO ESTA DEFINIDO: "+lexeme;
+               result+= "!!!!!!!!!!!!!!!!!!!!!ESTE SÍMBOLO NO ESTA DEFINIDO: "+lexeme;
                break;
             default:
                //result+=lexeme+" ";

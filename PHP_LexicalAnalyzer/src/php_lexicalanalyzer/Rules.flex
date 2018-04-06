@@ -43,7 +43,7 @@ error = [$]*+{digits}+{identifiers}|{identifiers}*{errorTemp}+{identifiers}*
 %}
 
 %%
-{white}+ {/*ignore*/}
+{white} {/*ignore*/}
 {scapeSecuence}+ {lexeme=yytext(); return Scape_secuence;}
 {white}*{reserveWords}{white}* {lexeme=yytext(); return Reserve_word;}
 {opening} {lexeme=yytext(); return Opening;}

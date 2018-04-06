@@ -71,10 +71,8 @@ public class Analyzer
            
                 switch(token){
                   case Error: //print if had an error
-                     if(!lex.lexeme.equals("")){
-                        results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
+                     results+=" Error, el simbolo no coincide: "+lex.lexeme+"\n";
                         fixedErrors.add(token+"á"+lex.lexeme);
-                     }
                    break;
                   case Scape_secuence:
                      fixedErrors.add(token+"á"+lex.lexeme);

@@ -228,6 +228,7 @@ public class Frame extends javax.swing.JFrame
       txtCorrections.setText("");
       txtResults.setText("");
       txtStatements.setText("");
+      Frame F = new Frame();
       
       try{
          //delete the content of lexer.java file
@@ -235,6 +236,9 @@ public class Frame extends javax.swing.JFrame
          writer.print("");
          writer.close();
          JOptionPane.showMessageDialog(null,"Se ha borrado Lexer.java con éxito"); 
+         
+         F.setVisible(true);
+         this.dispose();
       }catch(Exception e){}
    }//GEN-LAST:event_lblClearMouseClicked
 
